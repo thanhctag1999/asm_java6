@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title> Đơn Hàng</title>
+    <style>
+        /* Custom Styles */
+        
+        .page-header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .order-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .status-step {
+            text-align: center;
+            color: gray;
+        }
+        .status-step.active {
+            color: green;
+        }
+        .status-step.done {
+            color: green;
+            font-weight: bold;
+        }
+        .order-details {
+            margin-top: 20px;
+        }
+        .btn {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="page-header">
+        <h1>Quản Lý Đơn Hàng</h1>
+    </div>
+
+    <!-- Order Status Progress -->
+    <div class="order-status">
+        <div class="status-step done">Đơn Hàng Đã Đặt</div>
+        <div class="status-step done">Đơn Hàng Đã Thanh Toán</div>
+        <div class="status-step done">Đã Giao Cho ĐVVC</div>
+        <div class="status-step active">Đã Nhận Được Hàng</div>
+        <div class="status-step">Đánh Giá</div>
+    </div>
+
+    <!-- ORDERS Form -->
+    <form>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label for="orderId" class="form-label">Mã Đơn Hàng</label>
+                <input type="text" class="form-control" id="orderId" placeholder="Nhập mã đơn hàng">
+            </div>
+            <div class="col-md-6">
+                <label for="customerId" class="form-label">Mã Khách Hàng</label>
+                <input type="text" class="form-control" id="customerId" placeholder="Nhập mã khách hàng">
+            </div>
+            <div class="col-md-6">
+                <label for="discountId" class="form-label">Mã Giảm Giá</label>
+                <input type="text" class="form-control" id="discountId" placeholder="Nhập mã giảm giá">
+            </div>
+            <div class="col-md-6">
+                <label for="date" class="form-label">Ngày Đặt Hàng</label>
+                <input type="date" class="form-control" id="date">
+            </div>
+            <div class="col-md-6">
+                <label for="status" class="form-label">Trạng Thái Đơn Hàng</label>
+                <select class="form-select" id="status">
+                    <option>Đã Đặt</option>
+                    <option>Đã Thanh Toán</option>
+                    <option>Đã Giao Cho ĐVVC</option>
+                    <option>Đã Nhận Được Hàng</option>
+                    <option>Đã Đánh Giá</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="paymentMethod" class="form-label">Phương Thức Thanh Toán</label>
+                <input type="text" class="form-control" id="paymentMethod" placeholder="Nhập phương thức thanh toán">
+            </div>
+            <div class="col-md-12">
+                <label for="description" class="form-label">Mô Tả</label>
+                <textarea class="form-control" id="description" rows="3" placeholder="Nhập mô tả về đơn hàng"></textarea>
+            </div>
+            <div class="col-md-6">
+                <label for="totalPrice" class="form-label">Tổng Giá Trị</label>
+                <input type="text" class="form-control" id="totalPrice" placeholder="Nhập tổng giá trị">
+            </div>
+        </div>
+
+        <!-- ORDER_DETAIL Form -->
+        <h2 class="mt-5">Chi Tiết Đơn Hàng</h2>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label for="orderDetailId" class="form-label">Mã Chi Tiết Đơn Hàng</label>
+                <input type="text" class="form-control" id="orderDetailId" placeholder="Nhập mã chi tiết đơn hàng">
+            </div>
+            <div class="col-md-6">
+                <label for="productId" class="form-label">Mã Sản Phẩm</label>
+                <input type="text" class="form-control" id="productId" placeholder="Nhập mã sản phẩm">
+            </div>
+            <div class="col-md-6">
+                <label for="quantity" class="form-label">Số Lượng</label>
+                <input type="number" class="form-control" id="quantity" placeholder="Nhập số lượng">
+            </div>
+            <div class="col-md-6">
+                <label for="price" class="form-label">Giá</label>
+                <input type="text" class="form-control" id="price" placeholder="Nhập giá">
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-4">
+            <button  type="button" class="btn btn-primary"><a href="#!orderDetail">Chi tiết đơn hàng</a></button>
+            <button type="button" class="btn btn-success">Cập Nhật Trạng Thái</button>
+            <button type="reset" class="btn btn-secondary">Làm Mới</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+		integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" type="text/css" href="/src/main/resources/static/css/profile.css">
+	<title>Profile</title>
+</head>
+
+<body>
+
+	<header>
+		<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #243642;">
+			<div class="container">
+				<!-- Logo và tên thương hiệu -->
+				<a class="navbar-brand d-flex align-items-center" href="index.html"> <i
+						class="fa-brands fa-strava fa-2x me-2 text-light"></i> <span class="fw-bold text-light">Conan
+						Store</span>
+				</a>
+				<!-- Nút bật/tắt cho thiết bị di động -->
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+					aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<!-- Menu điều hướng -->
+				<div class="collapse navbar-collapse" id="navbarContent">
+					<!-- Menu chính -->
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+						<li class="nav-item"><a class="nav-link active text-light" href="index.html">Trang chủ</a>
+						</li>
+						<li class="nav-item"><a class="nav-link text-light" href="about.html">Về chúng tôi</a></li>
+						<li class="nav-item"><a class="nav-link text-light" href="product.html">Sản phẩm</a></li>
+						<li class="nav-item"><a class="nav-link text-light" href="contact.html">Liên hệ</a></li>
+					</ul>
+
+					<!-- search -->
+					<div class="searchbar">
+						<div class="searchbar-wrapper">
+							<div class="searchbar-left">
+								<div class="search-icon-wrapper">
+									<span class="search-icon searchbar-icon"> <svg xmlns="http://www.w3.org/2000/svg"
+											viewBox="0 0 24 24">
+											<path
+												d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z">
+											</path>
+										</svg>
+									</span>
+								</div>
+							</div>
+
+							<div class="searchbar-center">
+								<div class="searchbar-input-spacer"></div>
+
+								<input type="text" class="searchbar-input" maxlength="2048" name="q"
+									autocapitalize="off" autocomplete="off" title="Search" role="combobox"
+									placeholder="Search Google">
+							</div>
+
+							<div class="searchbar-right">
+								<svg class="voice-search" role="button" xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24">
+									<path fill="#4285f4"
+										d="m12 15c1.66 0 3-1.31 3-2.97v-7.02c0-1.66-1.34-3.01-3-3.01s-3 1.34-3 3.01v7.02c0 1.66 1.34 2.97 3 2.97z">
+									</path>
+									<path fill="#34a853" d="m11 18.08h2v3.92h-2z"></path>
+									<path fill="#fbbc05"
+										d="m7.05 16.87c-1.27-1.33-2.05-2.83-2.05-4.87h2c0 1.45 0.56 2.42 1.47 3.38v0.32l-1.15 1.18z">
+									</path>
+									<path fill="#ea4335"
+										d="m12 16.93a4.97 5.25 0 0 1 -3.54 -1.55l-1.41 1.49c1.26 1.34 3.02 2.13 4.95 2.13 3.87 0 6.99-2.92 6.99-7h-1.99c0 2.92-2.24 4.93-5 4.93z">
+									</path>
+								</svg>
+							</div>
+						</div>
+					</div>
+
+					<!-- Giỏ hàng và tài khoản người dùng -->
+					<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+						<li class="nav-item"><a class="nav-link text-light" href="cart.html"> <i
+									class="fa-solid fa-cart-shopping me-2"></i>
+							</a></li>
+						<li class="nav-item"><a class="nav-link text-light" href="profile.html"> <i
+									class="fa-solid fa-user me-2"></i>
+								<div id="userInfo"></div>
+
+							</a></li>
+						<li class="nav-item"><a class="nav-link text-light" id="logoutBtn" href="login.html"> <i
+									class="fa-solid fa-right-from-bracket me-2"></i></a></li>
+
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+	<div class="container mt-3">
+		<h4 class="text-secondary">Thông tin cá nhân</h4>
+		<hr>
+		<!-- Thông tin người dùng -->
+		<div class="d-flex align-items-center">
+			<img style="width: 200px; margin-right: 35px;" class="rounded-circle img" alt=" Profile Image">
+
+
+			<div class="d-flex flex-row justify-content-between align-items-center w-100">
+				<div class="card flex-fill p-3 shadow-sm">
+					<div class="card-body d-flex flex-row align-items-center">
+						<div class="flex-fill">
+							<h5 class="card-title mb-1" style="color: #76ABAE"></h5>
+							<p class="mb-1 text-dark">
+								Giới tính: <span class="fw-normal text-secondary gender"></span>
+							</p>
+							<p class="mb-1 text-dark">
+								Số điện thoại: <span class="fw-normal text-secondary phone"></span>
+							</p>
+							<p class="mb-1 text-dark">
+								Email: <span class="fw-normal text-secondary email"></span>
+							</p>
+						</div>
+					</div>
+					<div class="d-flex justify-content-end">
+						<a href="updateProfile.html" class="btn btn-dark" id="edit-btn">Chỉnh sửa</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- Tabs Bootstrap -->
+		<ul class="nav nav-tabs mt-4" id="productTabs" role="tablist">
+			<li class="nav-item" role="presentation">
+				<button class="nav-link active" id="favorite-tab" data-bs-toggle="tab" data-bs-target="#favorite"
+					type="button" role="tab">Danh mục yêu thích</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="processing-tab" data-bs-toggle="tab" data-bs-target="#processing"
+					type="button" role="tab">Đang
+					xử lý mua hàng</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="purchased-tab" data-bs-toggle="tab" data-bs-target="#purchased"
+					type="button" role="tab">Đã
+					mua hàng</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="cancelled-tab" data-bs-toggle="tab" data-bs-target="#cancelled"
+					type="button" role="tab">Đã
+					hủy</button>
+			</li>
+		</ul>
+
+		<!-- Tab Content -->
+		<div class="tab-content mt-3" id="productTabsContent">
+			<!-- Danh mục yêu thích -->
+			<div class="tab-pane fade show active" id="favorite" role="tabpanel">
+				<div class="row row-cols-1 row-cols-md-4 g-4" id="favorite-products">
+					<!-- Các sản phẩm yêu thích sẽ được hiển thị ở đây -->
+				</div>
+			</div>
+
+			<!-- Đang xử lý mua hàng -->
+			<div class="tab-pane fade" id="processing" role="tabpanel">
+				<div class="">
+					<div class="mt-3 shadow p-4 mb-5 bg-body rounded pe-5" style="height: 90vh;">
+						<h3>Lịch sử đặt hàng</h3>
+						<hr>
+						<div class="table-responsive bg-light p-3 rounded mt-4"
+							style="max-height: 65vh; overflow-y: auto;">
+							<table class="table table-bordered table-striped table-hover">
+								<thead class="table-dark">
+									<tr>
+										<th>STT</th>
+										<th>Mã đơn hàng</th>
+										<th>Ngày đặt</th>
+										<th>Tên sản phẩm</th>
+										<th>Số lượng</th>
+										<th>Tổng tiền</th>
+										<th>Trạng thái</th>
+										<th>Hành động</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td>
+											<button class="btn btn-dark">Hủy</button>
+										</td>
+
+									</tr>
+								</tbody>
+
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Đã mua hàng -->
+			<div class="tab-pane fade" id="purchased" role="tabpanel">
+				<div class="row row-cols-1 row-cols-md-4 g-4">
+					<div class="col">
+						<a class="text-dark text-decoration-none position-relative">
+							<div class="card text-center" style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
+								<div class="purchased-icon position-absolute top-0 end-0 m-2">
+									<i class="fas fa-check-circle text-success"></i>
+								</div>
+								<img src="https://bizweb.dktcdn.net/thumb/1024x1024/100/413/335/products/nike-court-legacy-sneakers-pink-white-dm0839-6001-jpeg.jpg?v=1685032474540"
+									class="card-img-top mx-auto mt-2"
+									style="width: 150px; height: 150px; object-fit: cover;" alt="Product Image">
+								<div class="card-body p-2">
+									<label class="card-title mb-1" style="color: #76ABAE;">Nike</label>
+									<p class="card-title">Giày Nike Court Legacy Sneakers
+										Pink/White</p>
+									<h5 class="card-title text-dark fw-bold">1.650.000₫</h5>
+									<p class="text-muted">Số lượng: 1</p>
+									<p class="text-muted">Ngày mua: 01/11/2024</p>
+								</div>
+								<div class="mb-3">
+									<button class="btn btn-outline-secondary" style="height: 40px;" disabled>Đã
+										mua</button>
+									<button class="btn btn-dark" style="height: 40px;" data-bs-toggle="modal"
+										data-bs-target="#rateProductModal">Đánh
+										giá sản phẩm</button>
+								</div>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- Đã hủy -->
+			<div class="tab-pane fade" id="cancelled" role="tabpanel">
+				<div class="">
+					<div class="mt-3 shadow p-4 mb-5 bg-body rounded pe-5" style="height: 90vh;">
+						<h3>Sản phẩm đã hủy</h3>
+						<hr>
+						<div class="table-responsive bg-light p-3 rounded mt-4"
+							style="max-height: 65vh; overflow-y: auto;">
+							<table class="table table-bordered table-striped table-hover">
+								<thead class="table-dark">
+									<tr>
+										<th>STT</th>
+										<th>Mã đơn hàng</th>
+										<th>Ngày đặt</th>
+										<th>Tên sản phẩm</th>
+										<th>Số lượng</th>
+										<th>Tổng tiền</th>
+										<th>Trạng thái</th>
+										<th>Hành động</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td></td>
+										<td>
+											<button class="btn btn-dark">Hủy</button>
+										</td>
+
+									</tr>
+								</tbody>
+
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- đánh giá sản phẩm -->
+	<div class="modal fade" id="rateProductModal" tabindex="-1" aria-labelledby="rateProductModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="rateProductModalLabel">Đánh giá
+						sản phẩm</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="ratingForm">
+						<div class="mb-3">
+							<label for="rating" class="form-label">Đánh giá (1-5 sao)</label>
+							<select class="form-select" id="rating" name="rating" required>
+								<option value="1">1 Sao</option>
+								<option value="2">2 Sao</option>
+								<option value="3">3 Sao</option>
+								<option value="4">4 Sao</option>
+								<option value="5">5 Sao</option>
+							</select>
+						</div>
+						<div class="mb-3">
+							<label for="review" class="form-label">Nhận xét</label>
+							<textarea class="form-control" id="review" name="review" rows="3" required></textarea>
+						</div>
+						<button type="button" class="btn btn-primary" onclick="submitReview()">Gửi đánh giá</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- address -->
+	<div class="modal fade" id="rateProductModal" tabindex="-1" aria-labelledby="rateProductModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="rateProductModalLabel">Địa chỉ</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="ratingForm">
+						<div class="mb-3"></div>
+						<button type="button" class="btn btn-primary" onclick="submitReview()">Gửi đánh giá</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer th:fragment="footer" class="footer mt-5">
+		<div class="container">
+			<div class="row">
+				<!-- Cột 1: Liên kết nhanh -->
+				<div class="footer-col">
+					<h4>Liên kết nhanh</h4>
+					<ul>
+						<li><a href="#">Trang chủ</a></li>
+						<li><a href="#">Giới thiệu</a></li>
+						<li><a href="#">Sản phẩm</a></li>
+						<li><a href="#">Liên hệ</a></li>
+					</ul>
+				</div>
+
+				<!-- Cột 2: Thông tin liên hệ -->
+				<div class="footer-col">
+					<h4>Thông tin liên hệ</h4>
+					<ul>
+						<li><span>Địa chỉ: 123 Đường ABC, Quận Ninh Kiều,
+								TP.CanTho</span></li>
+						<li><span>Điện thoại: (012) 3456-789</span></li>
+						<li><span>Email: abc@gmail.com</span></li>
+					</ul>
+				</div>
+
+				<!-- Cột 3: Mạng xã hội -->
+				<div class="footer-col">
+					<h4>Theo dõi chúng tôi</h4>
+					<div class="social-links">
+						<a href="#"><i class="fab fa-facebook-f"></i></a> <a href="#"><i class="fab fa-twitter"></i></a>
+						<a href="#"><i class="fab fa-instagram"></i></a> <a href="#"><i
+								class="fab fa-linkedin-in"></i></a>
+					</div>
+				</div>
+			</div>
+			<div class="footer-bottom">
+				<p>&copy; 2024 Bản quyền thuộc về Công ty ABC. Mọi quyền được bảo
+					lưu.</p>
+			</div>
+		</div>
+	</footer>
+	<script>
+		function confirmCancelltaion() {
+			if (confirm("Bạn có chắc chắn muốn hủy đơn hàng này?")) {
+				// Thực hiện hủy đơn hàng ở đây
+				alert("Đơn hàng đã được hủy.");
+			}
+		}
+	</script>
+	<script>
+		function getCookie(name) {
+			const value = `; ${document.cookie}`;
+			const parts = value.split(`; ${name}=`);
+			if (parts.length === 2) return JSON.parse(decodeURIComponent(parts.pop().split(';').shift()));
+			return null;
+		}
+		const userCookie = getCookie('user');
+		if (userCookie) {
+			console.log("UserName: " + userCookie.userName); // Get the user name
+			console.log("Role: " + userCookie.role); // Get the user role
+			console.log("Address: " + userCookie.addresses); // Get user addresses
+			console.log("Phone: " + userCookie.phone); // Get user addresses
+			console.log("Email: " + userCookie.email); // Get user addresses
+			console.log("ID: " + userCookie.id); // Get user addresses
+			console.log("Image: " + userCookie.userImage); // Get user addresses
+		}
+
+
+		document.addEventListener('DOMContentLoaded', function () {
+			// Lấy thông tin người dùng từ cookie
+			const userInfo = getCookie('user');
+
+			if (userInfo) {
+				// Cập nhật ảnh đại diện nếu có trong cookie
+				document.querySelector('img.rounded-circle').src = userInfo.userImage ? `http://localhost:8080/uploads/${userInfo.userImage}` : 'http://localhost:8080/uploads/default.jpg';
+
+
+				// Cập nhật các thông tin khác (Tên, giới tính, số điện thoại, email)
+				document.querySelector('.card-title').textContent = userInfo.userName || 'Không xác định';
+				document.querySelector('.phone').textContent = userInfo.phone || 'Không có số điện thoại';
+				document.querySelector('.email').textContent = userInfo.email || 'Không có email';
+
+				let genderText = 'Không xác định';
+				if (userInfo.gender === true) {
+					genderText = 'Nữ';
+				} else if (userInfo.gender === false) {
+					genderText = 'Nam';
+				}
+				document.querySelector('.gender').textContent = genderText;
+			} else {
+				console.error('Không tìm thấy thông tin người dùng trong cookie');
+			}
+		});
+
+
+
+		// Hàm cập nhật cookie
+		function setCookie(name, value, days) {
+			const expires = new Date();
+			expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000)); // Đặt thời gian hết hạn cookie
+			document.cookie = `${name}=${encodeURIComponent(JSON.stringify(value))}; expires=${expires.toUTCString()}; path=/`;
+		}
+
+
+		function loadFavoriteProducts() {
+			const accountId = getCookie('user') ? getCookie('user').id : null;  // Lấy accountId từ cookie user
+			console.log(accountId);
+			if (accountId) {
+				fetch(`http://localhost:8080/api/favorites/products?accountId=${accountId}`)
+					.then(response => response.json())
+					.then(products => {
+						const favoriteProductsContainer = document.getElementById('favorite-products');
+						favoriteProductsContainer.innerHTML = ''; // Xóa các sản phẩm cũ
+
+						if (products.length === 0) {
+							favoriteProductsContainer.innerHTML = '<p class="text-center">Không có sản phẩm yêu thích.</p>';
+						} else {
+							products.forEach(product => {
+								const productHtml = `
+                            <div class="col">
+                                <a class="text-dark text-decoration-none position-relative">
+                                    <div class="card text-center" style="box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;">
+                                        <div class="favorite-icon position-absolute top-0 end-0 m-2">
+                                            <i class="fas fa-heart text-danger"></i>
+                                        </div>
+                                        <img src="${product.image}" class="card-img-top mx-auto mt-2" style="width: 150px; height: 150px; object-fit: cover;" alt="Product Image">
+                                        <div class="card-body p-2">
+                                            <label class="card-title mb-1" style="color: #76ABAE;">${product.brand}</label>
+                                            <p class="card-title">${product.name}</p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <button class="btn btn-outline-dark" style="height: 40px;">Thêm vào giỏ hàng</button>
+                                            <button class="btn btn-dark" style="height: 40px;" onclick="removeFromFavorites(${product.id})">Hủy yêu thích</button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        `;
+								favoriteProductsContainer.insertAdjacentHTML('beforeend', productHtml);
+							});
+						}
+					})
+					.catch(error => {
+						const favoriteProductsContainer = document.getElementById('favorite-products');
+						favoriteProductsContainer.innerHTML = '<p class="text-center">Không có sản phẩm yêu thích.</p>';
+					});
+
+			}
+		}
+
+
+		function removeFromFavorites(productId) {
+			const userCookie = getCookie('user');
+			if (userCookie) {
+				const accountId = userCookie.id;
+
+				// Gửi yêu cầu POST đến server để hủy yêu thích sản phẩm
+				fetch(`http://localhost:8080/api/favorites/remove?accountId=${accountId}&productId=${productId}`, {
+					method: 'POST',
+				})
+					.then(response => {
+						// Kiểm tra xem phản hồi có phải là JSON không
+						const contentType = response.headers.get("Content-Type");
+						if (contentType && contentType.includes("application/json")) {
+							return response.json(); // Nếu là JSON, parse nó
+						} else {
+							// Nếu không phải JSON, trả về văn bản (hoặc xử lý lỗi)
+							return response.text().then(text => {
+								throw new Error(text); // Ném lỗi với thông báo từ backend
+							});
+						}
+					})
+					.then(data => {
+						alert(data.message || "Đã hủy yêu thích sản phẩm.");
+						loadFavoriteProducts(); // Tải lại danh sách yêu thích sau khi xóa
+					})
+					.catch(error => {
+						// Xử lý lỗi nếu có
+						alert("Lỗi: " + error.message);
+					});
+			} else {
+				alert("Vui lòng đăng nhập trước khi hủy yêu thích.");
+			}
+		}
+
+
+		loadFavoriteProducts();
+	</script>
+
+
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+
+		</script>
+
+</body>
+
+</html>

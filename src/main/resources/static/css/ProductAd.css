@@ -1,0 +1,134 @@
+.add-variant-card {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	border: 1px dashed #007bff;
+	min-height: 120px;
+	width: 100%;
+	cursor: pointer;
+}
+
+.variant-card {
+	min-width: 200px;
+	flex: 1;
+	padding: 16px;
+	position: relative;
+	transition: background-color 0.3s;
+}
+
+.variant-card:hover {
+	background-color: #f1f1f1;
+}
+
+.is-valid {
+	border-color: green;
+}
+
+.is-invalid {
+	border-color: red;
+}
+
+.delete-button {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	color: red;
+	display: none;
+	cursor: pointer;
+}
+
+.variant-card:hover .delete-button {
+	display: block;
+}
+
+.variant-container {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: stretch;
+}
+
+.saved-info {
+	font-weight: bold;
+	margin-top: 10px;
+}
+
+.saved-variants {
+	border: 1px solid #007bff;
+	border-radius: 8px;
+	padding: 10px;
+	background-color: #f8f9fa;
+	margin-bottom: 15px;
+	max-height: 150px;
+	overflow-y: auto;
+}
+
+.variant-form-wrapper {
+	position: sticky;
+	top: 20px;
+	z-index: 1;
+	padding: 20px;
+	border: 1px solid #007bff;
+	border-radius: 8px;
+	background-color: #ffffff;
+	margin-top: 30px;
+}
+
+.variant-container {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: stretch;
+	max-height: 300px;
+	overflow-y: auto;
+}
+
+.variant-form-arrow {
+	position: absolute;
+	left: 50%;
+	top: -35px;
+	border: 10px solid transparent;
+	border-bottom-color: #007bff;
+}
+
+.product-image {
+	max-width: 100%;
+	height: auto;
+	display: none;
+}
+
+.product-card {
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+	transition: transform 0.3s, box-shadow 0.3s;
+	border-radius: 8px;
+}
+
+.product-card:hover {
+	transform: scale(1.05);
+	box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.spinner-border {
+    margin-left: 10px;
+}
+
+input.success, select.success {
+    background-color: #d4edda;  /* Màu nền xanh nhẹ */
+    border-color: #28a745;  /* Viền xanh đậm */
+}
+
+input.error, select.error {
+    background-color: #f8d7da;  /* Màu nền đỏ nhạt */
+    border-color: #dc3545;  /* Viền đỏ */
+}
+
+

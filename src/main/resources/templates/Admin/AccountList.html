@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Tài Khoản</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
+    <script src="/js/angular-route.min.js"></script>
+    <script src="/js/angular.min.js"></script>
+
+    <style>
+        .table-container {
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        th,
+        td {
+            word-wrap: break-word;
+            word-break: break-word;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        td img {
+            max-width: 100px;
+            max-height: 100px;
+        }
+
+        #selectAll {
+            display: none;
+        }
+
+        .select-account {
+            display: none;
+        }
+
+        #deleteSelected {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Danh Sách Tài Khoản</h2>
+
+        <!-- Nút Xóa Chọn Lọc -->
+        <button id="deleteSelected" class="btn btn-danger mt-3">Xóa
+            chọn lọc</button>
+
+        <!-- Bảng Tài Khoản -->
+        <div id="accountTable" class="table-container">
+            <table id="accountTableData" class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th><input type="checkbox" id="selectAll"></th>
+                        <th>ID</th>
+                        <th>Tên Tài Khoản</th>
+                        <th>Email</th>
+                        <th>Ngày Sinh</th>
+                        <th>Ảnh</th>
+                        <th>Vai Trò</th>
+                        <th>Trạng Thái</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="account : ${accounts}" th:attr="data-id=${account.accountId}">
+                        <td><input type="checkbox" class="select-account" value="${account.accountId}"></td>
+                        <td th:text="${account.accountId}"></td>
+                        <td th:text="${account.fullName}"></td>
+                        <td th:text="${account.email}"></td>
+                        <td th:text="${#dates.format(account.birthday, 'dd/MM/yyyy')}"></td>
+                        <td><img th:src="${account.image}" alt="" style="max-width: 100px; max-height: 100px;"></td>
+                        <td th:text="${account.role != null ? account.role : 'Không có vai trò'}"></td>
+                        <td th:text="${account.isActived}"></td>
+                        <td><a class="btn btn-secondary btn-sm editButton"
+                                th:href="@{/Admin/accounts/edit/{id}(id=${account.accountId})}">Sửa</a>
+                            <button th:onclick="'deleteAccount(' + ${account.accountId} + ')'"
+                                class="btn btn-danger btn-sm delete-button">Xóa</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#accountTableData').DataTable();
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const rows = document.querySelectorAll('#accountTableData tr');
+            let isSelectMode = false;
+
+            // Giữ chuột 2 giây để hiển thị checkbox và nút xóa
+            rows.forEach(function (row) {
+                let timeout;
+                row.addEventListener('mousedown', function (event) {
+                    if (event.button === 0) {
+                        timeout = setTimeout(function () {
+                            toggleCheckboxes(true); // Hiển thị checkbox và nút xóa
+                        }, 2000);
+                    }
+                });
+
+                row.addEventListener('mouseup', function () {
+                    clearTimeout(timeout); // Hủy bỏ nếu người dùng thả chuột trước 2 giây
+                });
+            });
+
+            // Hiển thị hoặc ẩn checkbox và nút xóa
+            function toggleCheckboxes(enable) {
+                const checkboxes = document.querySelectorAll('.select-account');
+                const selectAll = document.getElementById('selectAll');
+                const deleteSelected = document.getElementById('deleteSelected');
+
+                checkboxes.forEach(checkbox => {
+                    checkbox.style.display = enable ? 'inline-block' : 'none';
+                });
+                selectAll.style.display = enable ? 'inline-block' : 'none';
+                deleteSelected.style.display = enable ? 'inline-block' : 'none';
+            }
+
+            // Chọn tất cả tài khoản
+            document.getElementById('selectAll').addEventListener('change', function () {
+                const checkboxes = document.querySelectorAll('.select-account');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+            });
+
+            // Lấy danh sách ID của tài khoản đã chọn
+            function getSelectedAccountIds() {
+                const selectedIds = [];
+                document.querySelectorAll('.select-account:checked').forEach(checkbox => {
+                    selectedIds.push(checkbox.value);
+                });
+                return selectedIds;
+            }
+
+            // Xóa các tài khoản đã chọn
+            document.getElementById('deleteSelected').addEventListener('click', function () {
+                const selectedAccountIds = getSelectedAccountIds();
+                if (selectedAccountIds.length === 0) {
+                    alert('Vui lòng chọn ít nhất một tài khoản để xóa.');
+                    return;
+                }
+
+                // Xác nhận trước khi xóa
+                if (confirm('Bạn có chắc chắn muốn xóa các tài khoản này?')) {
+                    fetch('/Admin/accounts/deleteMultiple', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ accountIds: selectedAccountIds })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data && data.message === 'Xóa thành công') {
+                                alert('Xóa thành công!');
+                                location.reload();
+                            } else {
+                                alert('Có lỗi xảy ra khi xóa tài khoản!');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error deleting accounts:', error);
+                            alert('Có lỗi xảy ra khi xóa tài khoản!');
+                        });
+                }
+            });
+
+            // Xóa một tài khoản đơn lẻ
+            window.deleteAccount = function (accountId) {
+                const accountRow = document.querySelector(`#accountTableData tr[data-id='${accountId}']`);
+                if (accountRow) {
+                    const restoreButton = document.createElement('button');
+                    restoreButton.innerText = 'Khôi phục (5s)';
+                    restoreButton.classList.add('btn', 'btn-warning', 'ml-2');
+
+                    const deleteButton = accountRow.querySelector('.delete-button');
+                    const editButton = accountRow.querySelector('.btn-secondary');
+                    if (deleteButton) {
+                        deleteButton.style.display = 'none';
+                    }
+                    if (editButton) {
+                        editButton.style.display = 'none';
+                    }
+
+                    const actionCell = accountRow.querySelector('td:last-child');
+                    actionCell.appendChild(restoreButton);
+
+                    let isRed = false;
+                    const flashInterval = setInterval(() => {
+                        accountRow.style.backgroundColor = isRed ? '' : 'gray';
+                        accountRow.style.color = isRed ? '' : 'white';
+                        isRed = !isRed;
+                    }, 500);
+
+                    let countdown = 5;
+                    const timeoutId = setInterval(() => {
+                        countdown--;
+                        restoreButton.innerText = `Khôi phục (${countdown}s)`;
+
+                        if (countdown === 0) {
+                            clearInterval(timeoutId);
+                            clearInterval(flashInterval);
+                            accountRow.style.backgroundColor = 'red';
+                            accountRow.style.color = 'white';
+                            restoreButton.innerText = 'Đang xóa...';
+                            restoreButton.disabled = true;
+
+                            fetch(`/Admin/accounts/delete/${accountId}`, { method: 'DELETE' })
+                                .then(response => {
+                                    if (response.ok) {
+                                        const successMessage = document.createElement('div');
+                                        successMessage.innerText = 'Xóa thành công';
+                                        successMessage.style.fontWeight = 'bold';
+                                        successMessage.style.textAlign = 'center';
+                                        successMessage.style.color = 'green';
+                                        accountRow.appendChild(successMessage);
+
+                                        setTimeout(() => {
+                                            accountRow.remove();
+                                        }, 1000);
+                                    } else {
+                                        restoreButton.innerText = 'Không thể xóa (dữ liệu đang sử dụng)';
+                                        restoreButton.classList.replace('btn-warning', 'btn-danger');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error(error);
+                                    restoreButton.innerText = 'Lỗi!';
+                                    restoreButton.classList.replace('btn-warning', 'btn-danger');
+                                });
+                        }
+                    }, 1000);
+                }
+            };
+        });
+    </script>
+</body>
+
+</html>

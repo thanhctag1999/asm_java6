@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách khuyến mãi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="">
+        <main ng-app="discount-form-app" ng-controller="discount-form-ctrl">
+            <!-- Page -->
+            <div class="page">
+                <div class="page-header text-center">
+                    <h1 class="page-title">Thông Tin Mã Giảm Giá</h1>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#!home">Trang chủ</a></li>
+                        <li class="breadcrumb-item active"><a href="#!discount">Mã giảm giá</a></li>
+                        <li class="breadcrumb-item ">Thông tin</li>
+                    </ol>
+                </div>
+
+                <div class="page-content container-fluid">
+                    <!-- Form Panel -->
+                    <div class="panel">
+                        <div class="panel-body">
+                            <form th:action="@{/admin/discount/form}" method="post" id="exampleFullForm"
+                                name="formDiscount">
+                                <!-- Form fields as in original code... -->
+                            </form>
+                        </div>
+                    </div>
+                    <!-- End Form Panel -->
+                    <!-- List Panel -->
+                    <div class="card shadow mt-4">
+                        <div class="card-header text-center">
+                            <h3 class="card-title">Danh Sách Mã Giảm Giá</h3>
+                        </div>
+                        <div class="card-body">
+                            <!-- Search Field -->
+                            <div class="row mb-3">
+                                <div class="col-md-4 offset-md-8">
+                                    <input type="text" class="form-control" placeholder="Tìm kiếm mã giảm giá..." ng-model="searchQuery">
+                                </div>
+                            </div>
+                    
+                            <table class="table table-striped table-hover text-center align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Tên Mã Giảm Giá</th>
+                                        <th>Mã Giảm Giá</th>
+                                        <th>Số Tiền Giảm</th>
+                                        <th>Ngày Áp Dụng</th>
+                                        <th>Ngày Hết Hạn</th>
+                                        <th>Mô Tả</th>
+                                        <th>Hành Động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in discounts | filter:searchQuery">
+                                        <!-- <td>{{ item.name }}</td>
+                                        <td>{{ item.code }}</td>
+                                        <td>{{ item.discount_value | currency : '' : 0 }}</td>
+                                        <td>{{ item.start_date | date:'dd/MM/yyyy' }}</td>
+                                        <td>{{ item.end_date | date:'dd/MM/yyyy' }}</td>
+                                        <td>{{ item.description }}</td> -->
+                                        <td>Example Name</td>
+                                        <td>EX1234</td>
+                                        <td>1,000,000 VND</td>
+                                        <td>High Quality</td>
+                                        <td>01/01/2023</td>
+                                        <td>31/12/2023</td>
+                                        <td>500,000 VND</td>
+                                        <td>
+                                            <button class="btn btn-info btn-sm mx-1" ng-click="edit(item)">Chỉnh sửa</button>
+                                            <button class="btn btn-danger btn-sm mx-1" ng-click="delete(item)">Xóa</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>                 
+                    <!-- End List Panel -->
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

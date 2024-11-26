@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Người Dùng</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="mt-5">
+        <h2 class="text-center mb-4">Danh Sách Người Dùng</h2>
+        
+        <!-- Bảng Người Dùng -->
+        <div id="userTable" class="table-container">
+            <table class="table table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên Người Dùng</th>
+                        <th>Email</th>
+                        <th>Ngày Tạo</th>
+                        <th>Trạng Thái</th>
+                        <th>Số Điện Thoại</th> <!-- Thêm cột Số Điện Thoại -->
+                        <th>Địa Chỉ</th>      <!-- Thêm cột Địa Chỉ -->
+                        <th>Vai Trò</th>      
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.userId}"></td>
+                        <td th:text="${user.userName}"></td>
+                        <td th:text="${user.email}"></td>
+                        <td th:text="${#dates.format(user.createDate, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${user.status}"></td>
+                        <td th:text="${user.phone}"></td> <!-- Dữ liệu cho Số Điện Thoại -->
+                        <td th:text="${user.address}"></td> <!-- Dữ liệu cho Địa Chỉ -->
+                        <td th:text="${user.role}"></td> <!-- Dữ liệu cho Vai Trò -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- jQuery, Popper.js, and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="product.js"></script>
+
+</body>
+</html>

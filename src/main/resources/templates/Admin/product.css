@@ -1,0 +1,144 @@
+  /* CSS để căn chỉnh card dấu + */
+  .add-variant-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    /* Đảm bảo card có chiều cao đầy đủ */
+    border: 1px dashed #007bff;
+    /* Viền dấu + để dễ phân biệt */
+    min-height: 120px;
+    /* Đảm bảo có chiều cao tối thiểu */
+    width: 100%;
+    /* Chiếm toàn bộ chiều rộng của cột */
+    cursor: pointer;
+    /* Thêm con trỏ chuột khi hover */
+}
+
+.variant-card {
+    min-width: 200px;
+    /* Chiều rộng tối thiểu cho các card */
+    flex: 1;
+    /* Cho phép card mở rộng theo không gian có sẵn */
+    padding: 16px;
+    position: relative;
+    /* Để vị trí tuyệt đối cho dấu "X" */
+    transition: background-color 0.3s;
+    /* Hiệu ứng chuyển màu nền */
+}
+
+/* Hiệu ứng hover cho card */
+.variant-card:hover {
+    background-color: #f1f1f1;
+    /* Màu nền khi hover */
+}
+
+/* Dấu "X" để xóa biến thể */
+.delete-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: red;
+    display: none;
+    /* Ẩn dấu "X" ban đầu */
+    cursor: pointer;
+    /* Thay đổi con trỏ chuột khi hover */
+}
+
+/* Hiển thị dấu "X" khi hover */
+.variant-card:hover .delete-button {
+    display: block;
+    /* Hiển thị dấu "X" khi hover */
+}
+
+/* Đảm bảo các card nằm trong cùng một hàng */
+.variant-container {
+    display: flex;
+    flex-wrap: wrap;
+    /* Cho phép nhảy xuống hàng mới khi không đủ không gian */
+    align-items: stretch;
+    /* Để các card có chiều cao bằng nhau */
+}
+
+/* Phong cách cho phần thông tin đã lưu */
+.saved-info {
+    font-weight: bold;
+    margin-top: 10px;
+    /* Khoảng cách giữa tiêu đề và thông tin đã lưu */
+}
+
+.saved-variants {
+    border: 1px solid #007bff;
+    /* Viền cho danh sách biến thể đã lưu */
+    border-radius: 8px;
+    /* Bo góc cho khung */
+    padding: 10px;
+    /* Khoảng cách bên trong */
+    background-color: #f8f9fa;
+    /* Màu nền cho khung */
+    margin-bottom: 15px;
+    /* Khoảng cách phía dưới */
+    max-height: 150px;
+    /* Chiều cao tối đa của khung */
+    overflow-y: auto;
+    /* Hiển thị thanh cuộn nếu nội dung quá dài */
+}
+
+.variant-form-wrapper {
+    position: sticky;
+    top: 20px;
+    /* Khoảng cách từ đầu trang */
+    z-index: 1;
+    /* Đảm bảo form luôn ở trên cùng */
+    padding: 20px;
+    border: 1px solid #007bff;
+    border-radius: 8px;
+    background-color: #ffffff;
+    margin-top: 30px;
+}
+
+.variant-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    max-height: 300px;
+    /* Thay đổi chiều cao tối đa cho container */
+    overflow-y: auto;
+    /* Thêm thanh cuộn nếu cần */
+}
+
+
+.variant-form-arrow {
+    position: absolute;
+    left: 50%;
+    top: -35px;
+    border: 10px solid transparent;
+    border-bottom-color: #007bff;
+    /* Màu mũi tên */
+}
+
+.product-image {
+    max-width: 100%;
+    /* Đảm bảo hình ảnh không vượt quá chiều rộng của thẻ chứa */
+    height: auto;
+    /* Tự động điều chỉnh chiều cao */
+    display: none;
+    /* Ẩn hình ảnh khi không có URL */
+}
+
+/* Card sản phẩm */
+.product-card {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    /* Bóng cho card */
+    transition: transform 0.3s, box-shadow 0.3s;
+    /* Thêm hiệu ứng bóng */
+    border-radius: 8px;
+    /* Bo góc cho card */
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+    /* Phóng to card khi hover */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    /* Bóng sâu hơn khi hover */
+}

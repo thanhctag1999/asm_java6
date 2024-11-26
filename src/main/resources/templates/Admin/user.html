@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Người Dùng</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .user-card {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-radius: 8px;
+        }
+
+        .user-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .saved-info {
+            font-weight: bold;
+            margin-top: 10px;
+            color: green;
+        }
+
+        .image {
+            min-height: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mt-5">
+        <h2 class="text-center mb-4">Quản Lý Người Dùng</h2>
+        <form id="userForm">
+            <!-- Thông tin người dùng -->
+            <div class="row">
+                <div class="col-xl-4 col-xm-12 mb-3">
+                    <div class="card user-card">
+                        <div class="card-body text-center image">
+                            <img id="profileImage" src="" alt="User Image" class="img-fluid"
+                                style="max-height: auto; display: none;">
+                        </div>
+                        <div class="card-footer">
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="image" accept="image/*"
+                                    onchange="toggleImageInput()">
+                                <input class="form-control" id="imageUrl" type="text"
+                                    placeholder="https://example.com/image.jpg" oninput="toggleImageInput()">
+                            </div>
+                            <small id="fileName" class="form-text text-muted"></small>
+                            <img id="imagePreview" style="display:none; margin-top:10px;" alt="Hình ảnh xem trước"
+                                height="100" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-8 col-xm-12">
+                    <div class="form-group">
+                        <label for="userCode">Mã Người Dùng</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="userCode" placeholder="Nhập mã người dùng"
+                                >
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" onclick="toggleUserCode()">Tạo
+                                    Mã</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fullName">Tên Đầy Đủ</label>
+                        <input type="text" class="form-control" id="fullName" placeholder="Nhập tên đầy đủ" >
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Số Điện Thoại</label>
+                        <input type="text" class="form-control" id="phone" placeholder="Nhập số điện thoại">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Địa Chỉ</label>
+                        <input type="text" class="form-control" id="address" placeholder="Nhập địa chỉ">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Giới Tính</label>
+                        <select class="form-control" id="gender">
+                            <option value="MALE">Nam</option>
+                            <option value="FEMALE">Nữ</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthday">Ngày Sinh</label>
+                        <input type="date" class="form-control" id="birthday" >
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Nhập email" >
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Vai Trò</label>
+                        <select class="form-control" id="role">
+                            <option value="USER">Người Dùng</option>
+                            <option value="STAFF">Nhân Viên</option>
+                            <option value="ADMIN">Quản Trị Viên</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Mật Khẩu</label>
+                        <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu" >
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nút gửi form -->
+            <button type="submit" class="btn btn-primary mt-3">Thêm Người Dùng</button>
+            <span id="savedUserInfo" class="saved-info" style="display: none;">Người dùng đã được lưu!</span>
+        </form>
+    </div>
+
+    <script>
+        const profileImage = document.getElementById('profileImage');
+        const imageInput = document.getElementById('image');
+        const imageUrlInput = document.getElementById('imageUrl');
+
+        function toggleImageInput() {
+            const isImageInputEmpty = imageInput.value === "";
+            const isImageUrlEmpty = imageUrlInput.value === "";
+
+            if (!isImageInputEmpty) {
+                profileImage.src = URL.createObjectURL(imageInput.files[0]);
+                profileImage.style.display = "block";
+                imageUrlInput.value = ''; // Xóa giá trị ô URL
+                imageUrlInput.style.display = "none"; // Ẩn ô URL
+            } else if (!isImageUrlEmpty) {
+                const imageUrl = imageUrlInput.value.trim();
+                if (imageUrl.startsWith("http")) {
+                    profileImage.src = imageUrl;
+                    profileImage.style.display = "block";
+                } else {
+                    profileImage.style.display = "none"; // Ẩn hình ảnh nếu URL không hợp lệ
+                }
+                imageInput.value = ''; // Xóa giá trị ô tệp
+                imageInput.style.display = "none"; // Ẩn ô tệp
+            } else {
+                profileImage.style.display = "none"; // Ẩn hình ảnh
+                imageInput.style.display = ""; // Hiển thị lại ô tệp
+                imageUrlInput.style.display = ""; // Hiển thị lại ô URL
+            }
+        }
+
+        // Xử lý gửi form
+        document.getElementById('userForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            // Thêm mã xử lý lưu thông tin người dùng ở đây
+            // ...
+
+            // Hiển thị thông báo "Người dùng đã được lưu!"
+            const savedUserInfo = document.getElementById('savedUserInfo');
+            savedUserInfo.style.display = 'inline'; // Hiển thị thông báo
+            setTimeout(() => {
+                savedUserInfo.style.display = 'none'; // Ẩn thông báo sau 3 giây
+            }, 3000);
+        });
+        let isUserCodeAutoGenerated = false;
+
+        function toggleUserCode() {
+            const userCodeInput = document.getElementById('userCode');
+            if (isUserCodeAutoGenerated) {
+                userCodeInput.disabled = false; // Bật lại ô nhập
+                userCodeInput.value = ''; // Xóa mã tự động
+                isUserCodeAutoGenerated = false;
+            } else {
+                userCodeInput.disabled = true; // Vô hiệu hóa ô nhập
+                userCodeInput.value = generateUserCode(); // Tự động tạo mã
+                isUserCodeAutoGenerated = true;
+            }
+        }
+
+        function generateUserCode() {
+    // Lấy giá trị từ các ô nhập liệu
+    const fullName = document.getElementById('fullName').value.trim();
+    const birthYear = new Date(document.getElementById('birthday').value).getFullYear();
+    const role = document.getElementById('role').value;
+
+    // Tách tên từ họ và tên đầy đủ
+    const nameParts = fullName.split(" ");
+    const name = nameParts[nameParts.length - 1]; // Lấy phần tên cuối cùng
+
+    // Kết hợp các phần để tạo mã người dùng
+    return `${name}${birthYear}${role}`;
+}
+
+// Thêm logic để xử lý sự kiện click và bật/tắt ô nhập
+document.getElementById('generateCodeButton').addEventListener('click', function () {
+    const userCodeInput = document.getElementById('userCode');
+    
+    if (userCodeInput.disabled) {
+        // Nếu ô nhập bị vô hiệu hóa, bật lại để cho người dùng nhập
+        userCodeInput.disabled = false;
+        userCodeInput.value = ''; // Xóa mã đã tạo
+    } else {
+        // Nếu ô nhập đang hoạt động, tạo mã tự động và vô hiệu hóa
+        userCodeInput.value = generateUserCode();
+        userCodeInput.disabled = true;
+    }
+});
+    </script>
+</body>
+
+</html>

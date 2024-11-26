@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Loại Sản Phẩm</title>
+    <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/js/angular-route.min.js"></script>
+    <script src="/js/angular.min.js"></script>
+
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="mb-4">
+            <h4>Thêm Loại Sản Phẩm Mới</h4>
+            <form id="typeForm" method="post">
+                <!-- Trường tên loại sản phẩm -->
+                <div class="form-group">
+                    <label for="typeName">Tên Loại Sản Phẩm</label>
+                    <input type="text" id="typeName" name="typeName" class="form-control"
+                        placeholder="Nhập tên loại sản phẩm" required>
+                </div>
+
+                <!-- Nút hành động -->
+                <button type="submit" id="addTypeButton" class="btn btn-primary mt-3">Thêm Loại Sản Phẩm</button>
+                <button type="button" class="btn btn-primary mt-3" id="submitUpdate">Cập Nhật Loại Sản Phẩm</button>
+            </form>
+        </div>
+
+        <!-- Bảng danh sách loại sản phẩm -->
+        <h2 class="text-center mb-4">Danh Sách Loại Sản Phẩm</h2>
+        <table id="typeTable" class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Loại</th>
+                    <th>Hành Động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="type : ${types}">
+                    <td th:text="${type.typeId}"></td>
+                    <td th:text="${type.typeName}"></td>
+                    <td>
+                        <a class="btn btn-secondary btn-sm"
+                            th:href="@{/Admin/types/edit/{id}(id=${type.typeId})}">Sửa</a>
+                        <button id="deleteType_${type.typeId}" class="btn btn-danger btn-sm"
+                            th:onclick="'deleteType(' + ${type.typeId} + ')'">Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Thư viện JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Xử lý form thêm loại sản phẩm
+        document.getElementById('typeForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const submitBtn = document.getElementById('addTypeButton');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Đang thêm loại sản phẩm...';
+
+            const formData = new FormData();
+            formData.append("typeName", document.getElementById('typeName').value);
+
+            fetch("/Admin/types/add", {
+                method: "POST",
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Thêm loại sản phẩm thành công!');
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Lỗi:', error);
+                    alert('Thêm loại sản phẩm thất bại!');
+                })
+                .finally(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Thêm Loại Sản Phẩm';
+                });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('submitUpdate').addEventListener('click', function () {
+                // Lấy ID từ query string
+                const path = window.location.pathname;
+                const segments = path.split('/');
+                const typeId = segments[segments.length - 1];
+
+                if (!typeId) {
+                    alert('Không tìm thấy ID loại sản phẩm');
+                    return;
+                }
+
+                // Tạo FormData từ các trường trong form
+                const formData = new FormData();
+                formData.append("typeId", typeId);
+                formData.append("typeName", document.getElementById('typeName').value);
+
+                // Gửi yêu cầu PUT để cập nhật loại sản phẩm
+                fetch(`/Admin/types/edit/${typeId}`, {
+                    method: 'PUT',
+                    body: formData
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Cập nhật thất bại!');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        alert('Cập nhật thành công!');
+                        window.location.reload(); // Tải lại trang sau khi cập nhật thành công
+                    })
+                    .catch(error => {
+                        console.error('Lỗi:', error);
+                        alert('Cập nhật thất bại!');
+                    });
+            });
+        });
+
+        // Hàm xóa loại sản phẩm
+        function deleteType(typeId) {
+            if (confirm('Bạn có chắc chắn muốn xóa loại sản phẩm này?')) {
+                fetch(`/Admin/types/delete/${typeId}`, {
+                    method: 'DELETE'
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Không thể xóa loại sản phẩm.');
+                        }
+                        alert('Xóa thành công!');
+                        window.location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Lỗi:', error);
+                        alert('Xóa thất bại.');
+                    });
+            }
+        }
+
+        // Khởi tạo DataTable
+        $(document).ready(function () {
+            $('#typeTable').DataTable();
+        });
+    </script>
+</body>
+
+</html>

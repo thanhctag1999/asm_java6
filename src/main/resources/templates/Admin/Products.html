@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm Sản Phẩm Và Biến Thể</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+  .add-variant-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    border: 1px dashed #007bff;
+    min-height: 120px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.variant-card {
+    min-width: 200px;
+    flex: 1;
+    padding: 16px;
+    position: relative;
+    transition: background-color 0.3s;
+}
+
+.variant-card:hover {
+    background-color: #f1f1f1;
+}
+
+.delete-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: red;
+    display: none;
+    cursor: pointer;
+}
+
+.variant-card:hover .delete-button {
+    display: block;
+}
+
+.variant-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+}
+
+.saved-info {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.saved-variants {
+    border: 1px solid #007bff;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    margin-bottom: 15px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.variant-form-wrapper {
+    position: sticky;
+    top: 20px;
+    z-index: 1;
+    padding: 20px;
+    border: 1px solid #007bff;
+    border-radius: 8px;
+    background-color: #ffffff;
+    margin-top: 30px;
+}
+
+.variant-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.variant-form-arrow {
+    position: absolute;
+    left: 50%;
+    top: -35px;
+    border: 10px solid transparent;
+    border-bottom-color: #007bff;
+}
+
+.product-image {
+    max-width: 100%;
+    height: auto;
+    display: none;
+}
+
+.product-card {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-radius: 8px;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+    </style>
+</head>
+
+<body>
+    <div class=" mt-5">
+        <h2 class="text-center mb-4">Thêm Sản Phẩm</h2>
+        <form id="productForm">
+            <div class="row">
+                <div class="col-xl-4 col-xm-12">
+                    <div class="card product-card">
+                        <div style="min-height: 210px;" class="card-body text-center">
+                            <img id="productImage" src="" alt="Product Image" class="img-fluid"
+                                style="max-height: auto; display: none;">
+                        </div>
+                        <div class="card-footer">
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="image" accept="image/*"
+                                    onchange="clearFileInput(); toggleFileInput()">
+                                <input class="form-control" th:field="*{image}" id="imageUrl" type="text"
+                                    placeholder="https://example.com/image.jpg"
+                                    oninput="clearFileInput(); toggleFileInput()">
+                            </div>
+                            <small id="fileName" class="form-text text-muted"></small>
+                            <img id="imagePreview" style="display:none; margin-top:10px;" alt="Hình ảnh xem trước"
+                                height="100" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-8 col-xm-12">
+                    <div class="form-group">
+                        <label for="productName">Tên Sản Phẩm</label>
+                        <input type="text" class="form-control" id="productName" placeholder="Nhập tên sản phẩm">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="barcode">Mã vạch</label>
+                        <input type="number" class="form-control" id="barcode" placeholder="Nhập mã vạch sản phẩm">
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-8 col-xm-12 mb-3">
+                            <div class="form-group">
+                                <label for="description">Mô Tả</label>
+                                <textarea class="form-control" id="description" rows="3"
+                                    placeholder="Nhập mô tả sản phẩm"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-xm-12 mb-3">
+                            <div class="form-group">
+                                <label for="status">Trạng Thái</label>
+                                <select class="form-control" id="status">
+                                    <option value="available">Còn hàng</option>
+                                    <option value="out_of_stock">Hết hàng</option>
+                                    <option value="coming soon">Sắp có hàng</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Card hiển thị thông tin biến thể -->
+            <div class="card mt-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title">Thông Tin Biến Thể</h5>
+                </div>
+                <div class="card-body">
+                    <div class="variant-container" id="variantInfoContainer">
+                        <!-- Nội dung các biến thể sẽ được thêm vào đây -->
+                        <div class="col-xl-3 col-xm-12 mb-3">
+                            <div class="add-variant-card ml-2" id="addVariantCard">
+                                <span class="h-100 d-flex justify-content-center align-items-center">Thêm biến thể
+                                    +</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Biến Thể Sản Phẩm (ẩn ban đầu) -->
+            <div id="variantForm" class="variant-form-wrapper" style="display: none;">
+                <div class="variant-form-arrow"></div> <!-- Mũi tên chỉa vào form -->
+                <h4>Biến Thể Sản Phẩm</h4>
+
+                <div class="row">
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="form-group">
+                            <label for="color">Màu Sắc</label>
+                            <select class="form-control" id="color">
+                                <option value="1">Đỏ</option>
+                                <option value="2">Xanh</option>
+                                <option value="3">Vàng</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="form-group">
+                            <label for="size">Kích Cỡ</label>
+                            <select class="form-control" id="size">
+                                <option value="1">S</option>
+                                <option value="2">M</option>
+                                <option value="3">L</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="form-group">
+                            <label for="quantity">Số Lượng</label>
+                            <input type="number" class="form-control" id="quantity" placeholder="Nhập số lượng" min="0"
+                                required>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="form-group">
+                            <label for="price">Giá</label>
+                            <input type="number" class="form-control" id="price" placeholder="Nhập giá" min="0"
+                                step="0.01" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end align-items-center">
+                    <span id="savedProductInfo" class="saved-info"
+                        style="display: none; margin-left: 10px; color: green; margin-right: 10px;">Sản phẩm đã được
+                        lưu!</span>
+                    <button type="button" class="btn btn-success" id="addVariant">Thêm Biến Thể</button>
+                </div>
+            </div>
+
+            <!-- Nút gửi form -->
+            <button type="submit" class="btn btn-primary mt-3">Thêm Sản Phẩm</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+
+    <script>
+        const addVariantCard = document.getElementById('addVariantCard');
+        const variantForm = document.getElementById('variantForm');
+        const variantInfoContainer = document.getElementById('variantInfoContainer');
+        const savedVariantsContainer = document.getElementById('savedVariantsContainer');
+
+        // Hiển thị form biến thể khi nhấn vào card
+        document.getElementById('addVariantCard').addEventListener('click', function () {
+            const variantForm = document.getElementById('variantForm');
+
+            // Kiểm tra trạng thái hiển thị của form
+            if (variantForm.style.display === 'block') {
+                // Nếu form đang hiển thị, ẩn form
+                variantForm.style.display = 'none';
+            } else {
+                // Nếu form đang ẩn, hiển thị form
+                variantForm.style.display = 'block';
+            }
+        });
+
+        // Xử lý thêm biến thể
+        document.getElementById('addVariant').addEventListener('click', function () {
+            const colorSelect = document.getElementById('color');
+            const sizeSelect = document.getElementById('size');
+            const color = colorSelect.options[colorSelect.selectedIndex].text;
+            const size = sizeSelect.options[sizeSelect.selectedIndex].text;
+            const quantity = document.getElementById('quantity').value;
+            const price = document.getElementById('price').value;
+
+            // Kiểm tra nếu tất cả các trường đều có dữ liệu hợp lệ
+            if (!quantity || !price || colorSelect.selectedIndex === -1 || sizeSelect.selectedIndex === -1) {
+                alert('Vui lòng điền đầy đủ thông tin biến thể!');
+                return;
+            }
+
+            // Tạo phần tử HTML hiển thị thông tin biến thể
+            const variantInfo = document.createElement('div');
+            variantInfo.classList.add('col-xl-3', 'col-xm-12', 'mb-3');
+            variantInfo.innerHTML = `
+        <div class="card variant-card p-2">
+            <span class="delete-button" onclick="removeVariant(this)">X</span>
+            <p><strong>Màu:</strong> ${color}</p>
+            <p><strong>Kích Cỡ:</strong> ${size}</p>
+            <p><strong>Số Lượng:</strong> ${quantity}</p>
+            <p><strong>Giá:</strong> ${price} VND</p>
+        </div>
+    `;
+            // Hiển thị thông báo "Sản phẩm đã được lưu!"
+            const savedProductInfo = document.getElementById('savedProductInfo');
+            savedProductInfo.style.display = 'inline'; // Hiển thị thông báo
+            setTimeout(() => {
+                savedProductInfo.style.display = 'none'; // Ẩn thông báo sau 3 giây
+            }, 3000);
+            // Thêm thông tin biến thể vào trước card chứa dấu "+"
+            variantInfoContainer.insertBefore(variantInfo, variantInfoContainer.lastElementChild);
+
+            // Thêm thông tin vào danh sách đã lưu
+            const savedVariant = document.createElement('div');
+            savedVariant.innerHTML = `<strong>Màu:</strong> ${color}, <strong>Kích Cỡ:</strong> ${size}, <strong>Số Lượng:</strong> ${quantity}, <strong>Giá:</strong> ${price} VND`;
+            savedVariantsContainer.appendChild(savedVariant);
+
+            // Ẩn form biến thể sau khi thêm
+            document.getElementById('variantForm').style.display = 'none';
+
+            // Xóa dữ liệu trong form để chuẩn bị cho lần nhập mới
+            colorSelect.selectedIndex = 0;
+            sizeSelect.selectedIndex = 0;
+            document.getElementById('quantity').value = '';
+            document.getElementById('price').value = '';
+
+        });
+
+        // Hàm xóa biến thể
+        function removeVariant(button) {
+            const variantCard = button.closest('.variant-card');
+            variantCard.parentElement.remove(); // Xóa card khỏi DOM
+        }
+        const imageInput = document.getElementById('image');
+        const productImage = document.getElementById('productImage');
+        const imageUrlInput = document.getElementById('imageUrl');
+
+        // Hàm hiển thị hoặc ẩn các trường nhập liệu
+        function toggleFileInput() {
+            const isImageInputEmpty = imageInput.value === "";
+            const isImageUrlEmpty = imageUrlInput.value === "";
+
+            if (!isImageInputEmpty) {
+                // Nếu ô nhập hình ảnh không rỗng, hiển thị hình ảnh
+                productImage.src = URL.createObjectURL(imageInput.files[0]);
+                productImage.style.display = "block";
+                imageUrlInput.value = ''; // Xóa giá trị ô URL
+                imageUrlInput.style.display = "none"; // Ẩn ô URL
+            } else if (!isImageUrlEmpty) {
+                // Nếu ô nhập URL không rỗng
+                const imageUrl = imageUrlInput.value.trim();
+
+                if (imageUrl.startsWith("https")) {
+                    // Nếu URL bắt đầu bằng http, hiển thị hình ảnh từ mạng
+                    productImage.src = imageUrl;
+                    productImage.style.display = "block";
+                } else if (imageUrl.startsWith("/images/")) {
+                    // Nếu URL bắt đầu bằng /images/, hiển thị hình ảnh từ thư mục source
+                    productImage.src = `${window.location.origin}${imageUrl}`;
+                    productImage.style.display = "block";
+                } else {
+                    productImage.style.display = "none"; // Ẩn hình ảnh nếu URL không hợp lệ
+                }
+
+                imageInput.value = ''; // Xóa giá trị ô tệp
+                imageInput.style.display = "none"; // Ẩn ô tệp
+            } else {
+                // Nếu cả hai ô đều rỗng, không ẩn ô nào
+                productImage.style.display = "none"; // Ẩn hình ảnh
+                imageInput.style.display = ""; // Hiển thị lại ô tệp
+                imageUrlInput.style.display = ""; // Hiển thị lại ô URL
+            }
+        }
+
+        // Khi người dùng chọn tệp
+        imageInput.addEventListener('change', function () {
+            toggleFileInput(); // Gọi hàm toggleFileInput sau khi người dùng chọn tệp
+        });
+
+        // Khi người dùng nhập URL
+        imageUrlInput.addEventListener('input', function () {
+            toggleFileInput(); // Gọi hàm toggleFileInput khi ô nhập URL có thay đổi
+        });
+
+        // Hàm xóa ô nhập URL khi ô nhập tệp không rỗng
+        function clearFileInput() {
+            if (imageUrlInput.value) {
+                imageInput.value = ''; // Xóa giá trị ô tệp
+            }
+            toggleFileInput(); // Gọi hàm toggleFileInput để cập nhật trạng thái hiển thị
+        }
+
+        // Gọi toggleFileInput khi ô nhập URL có thay đổi
+        imageUrlInput.addEventListener('input', toggleFileInput);
+        // Submit Product Information to Spring Boot
+document.getElementById('productForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    let productData = {
+        name: document.getElementById('productName').value,
+        barcode: document.getElementById('barcode').value,
+        description: document.getElementById('description').value,
+        status: document.getElementById('status').value,
+        // Include other data as needed
+    };
+
+    fetch('/products/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(productData)
+    }).then(response => response.json())
+      .then(data => {
+          console.log('Product added:', data);
+      });
+});
+
+// Submit Variant Information to Spring Boot
+document.getElementById('addVariant').addEventListener('click', function () {
+    let variantData = {
+        color: document.getElementById('color').value,
+        size: document.getElementById('size').value,
+        quantity: document.getElementById('quantity').value,
+        price: document.getElementById('price').value
+    };
+
+    fetch(`/products/${productId}/variants`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(variantData)
+    }).then(response => response.json())
+      .then(data => {
+          console.log('Variant added:', data);
+      });
+});
+
+    </script>
+</body>
+
+</html>

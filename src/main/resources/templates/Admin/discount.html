@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Khuyến mãi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 900px;
+            margin-top: 30px;
+        }
+        .page-header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .panel {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        .input-group-text {
+            background-color: #f0f2f5;
+        }
+        .btn {
+            margin-right: 5px;
+        }
+        .btn-secondary a {
+            color: white;
+            text-decoration: none;
+        }
+        .form-group.text-end {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="">
+    <main ng-app="discount-form-app" ng-controller="discount-form-ctrl">
+        <div class="page">
+            <div class="page-header text-center">
+                <h1 class="page-title">Thông Tin Mã Giảm Giá</h1>
+                <ol class="breadcrumb justify-content-center">
+                    <li class="breadcrumb-item"><a href="#!home">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Mã giảm giá</li>
+                    <!-- <li class="breadcrumb-item">Thông tin</li> -->
+                     <li class="breadcrumb-item active"><a href="#!discountList">Thông tin mã giảm giá</a></li>
+                </ol>
+            </div>
+
+            <div class="panel">
+                <form th:action="@{/admin/discount/form}" method="post" id="exampleFullForm" name="formDiscount">
+                    <div class="row g-3">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="name" class="form-control-label">Tên mã giảm giá <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                    <input id="name" ng-model="form.name" type="text" class="form-control" placeholder="Giảm giá tất cả sản phẩm trên 3 triệu" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="code" class="form-control-label">Mã giảm giá <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa fa-id-badge"></i></span>
+                                    <input id="code" ng-model="form.code" type="text" class="form-control" placeholder="OTP0012" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="discount_value" class="form-control-label">Số tiền giảm <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa fa-dollar-sign"></i></span>
+                                    <input type="number" class="form-control" ng-model="form.discount_value" placeholder="0" id="discount_value" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="start_date" class="form-control-label">Ngày áp dụng <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                    <input type="date" class="form-control" id="start_date" ng-model="form.start_date" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="end_date" class="form-control-label">Ngày hết hạn <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fa fa-calendar-alt"></i></span>
+                                    <input type="date" class="form-control" id="end_date" ng-model="form.end_date" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Mô tả</label>
+                                <textarea class="form-control" ng-model="form.description" placeholder="Mô tả về mã giảm giá"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="form-group text-end">
+                            <button type="button" class="btn btn-primary" ng-click="addDiscount()">Thêm</button>
+                            <button type="button" class="btn btn-warning" ng-click="editDiscount()">Sửa</button>
+                            <button type="button" class="btn btn-danger" ng-click="deleteDiscount()">Xóa</button>
+                            <button type="reset" class="btn btn-secondary">Làm mới</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="col-lg-6">
+                    <button type="button" class="btn btn-secondary"><a href="#!discountList">Danh sách khuyến mãi</a></button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
